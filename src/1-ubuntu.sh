@@ -10,11 +10,6 @@ else
     exit 9
 fi
 
-# 서버 직접 설정이면 아래와 같이 sudo를 붙여서 실행
-# sudo apt-get install -y software-properties-common
-# 도커 컨테이너 이면 sudo를 제거하고 실행
-apt-get install -y software-properties-common
-
 # passwd 에서 user 목록 저장
 # USERS=`cat /etc/passwd | aws -F ":" '{print $1}'`
 
@@ -31,6 +26,22 @@ echo "--------------------------------------------------------------"
 
 # 도메인이 있다면 도메인 호스트 설정
 read -p "Do you want to modify the hostname by entering the domain?(ex:domain.com) : " hostDomain
+
+# 서버 직접 설정이면 아래와 같이 sudo를 붙여서 실행
+# sudo apt-get install -y software-properties-common wget vim
+# 도커 컨테이너 이면 sudo를 제거하고 실행
+apt-get install -y software-properties-common wget vim cron
+apt update -y
+# sudo service cron start
+service cron start
+# cron systemctl 활성화
+# sudo systemctl enable cron.service
+systemctl enable cron.service
+# cron systemctl 등록 확인
+# sudo systemctl list-unit-files | grep cron
+systemctl list-unit-files | grep cron
+# sudo service cron status
+service cron status
 
 # /etc/passwd에서 user가 존재하는지 확인
 # for user in $USERS
@@ -117,7 +128,6 @@ if [[ "$hostDomain" != "" ]]; then
     hostname -F /etc/hostname
     sed -i "s/127.0.0.1\tlocalhost/127.0.0.1\tlocalhost\t${hostDomain}/g" /etc/hosts
 fi
-
 
 
 # iptables enable settings

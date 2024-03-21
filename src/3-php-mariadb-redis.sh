@@ -22,28 +22,32 @@ else
     MARIADB_VERSION=$MARIADB_VERSION
 fi
 
+
+apt-get install software-properties-common -y
+
 # Add latest php version repository
 add-apt-repository ppa:ondrej/php -y
 # 도커 컨테이너가 아니라면 sudo를 붙여야 한다
 # sudo add-apt-repository ppa:ondrej/php
-apt-get update
+apt update
 
 echo "--------------------------------------------------------------"
 echo "---------------- Installing php version : $PHP_VERSION"
 echo "--------------------------------------------------------------"
 apt-get install -y php$PHP_VERSION-fpm \
-    php$PHP_VERSION-intl \
-    php$PHP_VERSION-gd \
-    php$PHP_VERSION-curl \
-    php$PHP_VERSION-mbstring \
-    php$PHP_VERSION-xml \
-    php$PHP_VERSION-xmlrpc \
-    php$PHP_VERSION-zip \
     php$PHP_VERSION-bcmath \
-    php$PHP_VERSION-gmp \
-    php$PHP_VERSION-mysql \
+    php$PHP_VERSION-bz2 \
     php$PHP_VERSION-cli \
     php$PHP_VERSION-common \
+    php$PHP_VERSION-curl \
+    php$PHP_VERSION-ctype \
+    php$PHP_VERSION-dev \
+    php$PHP_VERSION-intl \
+    php$PHP_VERSION-gd \
+    php$PHP_VERSION-dom \
+    php$PHP_VERSION-mbstring \
+    php$PHP_VERSION-gmp \
+    php$PHP_VERSION-mysql \
     php$PHP_VERSION-pdo \
     php$PHP_VERSION-soap \
     php$PHP_VERSION-redis \
@@ -51,22 +55,22 @@ apt-get install -y php$PHP_VERSION-fpm \
     php$PHP_VERSION-memcache \
     php$PHP_VERSION-readline \
     php$PHP_VERSION-imagick \
-    php$PHP_VERSION-dev \
-    php$PHP_VERSION-imap 
+    php$PHP_VERSION-imap \
+    php$PHP_VERSION-ldap \
+    php$PHP_VERSION-gmp \
+    php$PHP_VERSION-xml \
+    php$PHP_VERSION-xmlrpc \
+    php$PHP_VERSION-zip 
     # php$PHP_VERSION-xsl
     # php$PHP_VERSION-xdebug
 
 echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 echo "---------------- Installing PHP ------------------------------"
-echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-
-echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 echo "---------------- configure PHP-FPM /etc/php/$PHP_VERSION/fpm/php-fpm.ini"
 echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 sed -i 's/;emergency_restart_threshold = 0/emergency_restart_threshold = 10/g' /etc/php/$PHP_VERSION/fpm/php-fpm.conf
 sed -i 's/;emergency_restart_interval = 0/emergency_restart_interval = 1m/g' /etc/php/$PHP_VERSION/fpm/php-fpm.conf
 
-echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 echo "---------------- configure PHP-POOL /etc/php/$PHP_VERSION/fpm/pool.d/www.conf"
 echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 sed -i 's/pm.max_children = 5/pm.max_children = 20/g' /etc/php/$PHP_VERSION/fpm/pool.d/www.conf
@@ -74,13 +78,11 @@ sed -i 's/pm.start_servers = 2/pm.start_servers = 8/g' /etc/php/$PHP_VERSION/fpm
 sed -i 's/pm.min_spare_servers = 1/pm.min_spare_servers = 4/g' /etc/php/$PHP_VERSION/fpm/pool.d/www.conf
 sed -i 's/pm.max_spare_servers = 3/pm.max_spare_servers = 12/g' /etc/php/$PHP_VERSION/fpm/pool.d/www.conf
 
-echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 echo "---------------- configure PHP.INI /etc/php/$PHP_VERSION/fpm/php.ini"
 echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 sed -i 's/memory_limit = 128M/memory_limit = 1024M/g' /etc/php/$PHP_VERSION/fpm/php.ini
 sed -i 's/post_max_size = 8M/post_max_size = 128M/g' /etc/php/$PHP_VERSION/fpm/php.ini
 sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 128M/g' /etc/php/$PHP_VERSION/fpm/php.ini
-
 
 
 echo "--------------------------------------------------------------"
